@@ -3,3 +3,5 @@ djangorestframework
 django-extensions
 pyparsing 
 pydot
+django-storages[s3]
+boto3

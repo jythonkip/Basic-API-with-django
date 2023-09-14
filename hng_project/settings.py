@@ -130,3 +130,13 @@ GRAPH_MODELS = {
   'all_applications': True,
   'group_models': True,
 }
+
+STORAGES = {
+    "staticfiles": {"BACKEND": "myproject.storage.S3Storage"},
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        # "OPTIONS": {
+        #   ...your_options_here
+        # },
+    },
+}

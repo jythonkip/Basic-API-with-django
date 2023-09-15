@@ -5,3 +5,9 @@ pyparsing
 pydot
 django-storages[s3]
 boto3
+django-dotenv
+requests
+psycopg2-binary
+dj-database-url == 1.2.0 
+gunicorn
+django-cors-headers == 3.14.0

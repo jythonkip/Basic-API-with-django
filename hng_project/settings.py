@@ -24,16 +24,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = str(os.environ.get('DEBUG')) == "1"
 
 ALLOWED_HOSTS = []
+
+if not DEBUG:
+    ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'rest_framework',
     'django_extensions',
+    # 'django_extensions',
+    'rest_framework',
+    "corsheaders",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -119,7 +124,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
+
+
+# STATIC_ROOT = BASE_DIR/"cdn"/"static"
+# MEDIA_URL = 'media/'
+# MEDIA_ROOT = BASE_DIR/"cdn"/'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -132,11 +142,61 @@ GRAPH_MODELS = {
 }
 
 STORAGES = {
-    "staticfiles": {"BACKEND": "myproject.storage.S3Storage"},
+    "staticfiles": {"BACKEND": "storages.backends.s3boto3.S3StaticStorage"},
     "default": {
-        "BACKEND": "storages.backends.s3.S3Storage",
+        "BACKEND": "hng_project.storages.MediaStore",
         # "OPTIONS": {
         #   ...your_options_here
         # },
     },
 }
+
+
+AWS_READY = str(os.environ.get("AWS_READY")) == "1"
+
+if not DEBUG and AWS_READY:
+
+    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY")
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_REGION_NAME = os.environ.get("AWS_S3_REGION_NAME")
+    AWS_S3_ENDPOINT_URL = 'https://hng-stage2-project.s3.amazonaws.com/'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    AWS_DEFAULT_ACL = None
+
+    AWS_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/'
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+POSTGRES_DB = os.environ.get("POSTGRES_DB")
+POSTGRES_USER = os.environ.get("POSTGRES_USER")
+POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+POSTGRES_HOST = os.environ.get('POSTGRES_HOST')
+POSTGRES_PORT = os.environ.get('POSTGRES_PORT')
+
+
+
+POSTGRES_READY = (
+POSTGRES_DB is not None 
+and POSTGRES_USER is not None 
+and POSTGRES_PASSWORD is not None 
+and POSTGRES_HOST is not None 
+and POSTGRES_PORT is not None 
+    
+)
+print(POSTGRES_READY)
+
+if POSTGRES_READY:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": POSTGRES_DB,
+            "USER": POSTGRES_USER,
+            "PASSWORD": POSTGRES_PASSWORD,
+            "HOST": POSTGRES_HOST,
+            "PORT": POSTGRES_PORT,
+        }
+    }
+
+CSRF_TRUSTED_ORIGINS = ['http://*', 'https://*']

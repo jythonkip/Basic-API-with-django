@@ -124,12 +124,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-# STATIC_URL = 'static/'
+STATIC_URL = 'static/'
 
 
-# STATIC_ROOT = BASE_DIR/"cdn"/"static"
-# MEDIA_URL = 'media/'
-# MEDIA_ROOT = BASE_DIR/"cdn"/'media'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'api/static'),
+]
+
+
+STATIC_ROOT = BASE_DIR/"local_cdn"/"static"
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR/"local_cdn"/'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -140,16 +147,16 @@ GRAPH_MODELS = {
   'all_applications': True,
   'group_models': True,
 }
-
-STORAGES = {
-    "staticfiles": {"BACKEND": "storages.backends.s3boto3.S3StaticStorage"},
-    "default": {
-        "BACKEND": "hng_project.storages.MediaStore",
-        # "OPTIONS": {
-        #   ...your_options_here
-        # },
-    },
-}
+if not DEBUG:
+    STORAGES = {
+        "staticfiles": {"BACKEND": "storages.backends.s3boto3.S3StaticStorage"},
+        "default": {
+            "BACKEND": "hng_project.storages.MediaStore",
+            # "OPTIONS": {
+            #   ...your_options_here
+            # },
+        },
+    }
 
 
 AWS_READY = str(os.environ.get("AWS_READY")) == "1"
@@ -187,7 +194,7 @@ and POSTGRES_PORT is not None
 )
 print(POSTGRES_READY)
 
-if POSTGRES_READY:
+if POSTGRES_READY and not DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",

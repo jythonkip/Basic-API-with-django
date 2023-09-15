@@ -5,6 +5,8 @@ from .views import (
     CreatePersonsAPIView
 )
 
+
+app_name = 'api'
 urlpatterns = [
     path('list/', ListPersonsAPIView.as_view(), name='list'),
     path('<int:id>/',  RetrieveUpdateDestroyPersonsAPIView.as_view(), name='retrieve_update_delete'),

@@ -12,5 +12,5 @@ def validate_name_is_unqiue(value):
 def validate_email_is_unqiue(value):
     email = Persons.objects.filter(email__iexact = value)
     if email.exists():
-        raise serializers.ValidationError('Email must be unique')
+        raise serializers.ValidationError("An account has already been created with this email")
     return value 

@@ -1,0 +1,25 @@
+name: Build
+
+on:
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - main
+
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@vs
+            - name: set up python
+              uses: actions/setup-python@v3
+              with:
+                python-version: 3.9
+            - name: install all dependenices
+              run: |
+                pip install -r requirements.txt
+            - name: Run automated test
+              run: python manage.py tests

@@ -16,9 +16,9 @@
   
   #### Want to know how to use this API? Read the [Documentation](https://api-person-service.onrender.com/)
   ##### Reasons why you may want to use tthis API service
-    - [Good and Extensive Documentation](https://api-person-service.onrender.com/)
-    - Greate Community Supports
-    - Easy to use and access
+- [Good and Extensive Documentation](https://api-person-service.onrender.com/)
+- Greate Community Supports
+- Easy to use and access
 #### To step up the project locally
 follow the guidelines below to setup this project locally:
 - [fork this repository](https://github.com/Kingsley-Opara/Basic-API-with-django)
